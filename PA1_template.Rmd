@@ -7,7 +7,7 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r}
+```{r echo=TRUE}
 if(!file.exists("activity.csv")){
   unzip("activity.zip")
 }
@@ -20,31 +20,31 @@ mdata <- na.omit(rdata)
 ## What is mean total number of steps taken per day?
 
 # Calculate the total number of steps taken per day.
-```{r}
+```{r echo=TRUE}
 steps_taken_per_day <- aggregate(mdata$steps, by = list(Steps.Date = mdata$date), FUN = "sum")
 
 ```
 # Make a histogram of the total number of steps taken each day.
 
-```{r}
+```{r echo=TRUE}
 hist(steps_taken_per_day$x, col= "yellow",
      breaks = 20,
      main= "Total number of steps taken each day",
      xlab = "Number of steps per day")
 ```
 # Calculate the mean and median of the total number of steps taken per day.
-```{r}
+```{r echo=TRUE}
 mean_of_steps <- mean(steps_taken_per_day[,2])
 print(mean_of_steps)
 ```
-```{r}
+```{r echo=TRUE}
 median_of_steps <- median(steps_taken_per_day[,2])
 print(median_of_steps)
 ```
 ## What is the average daily activity pattern?
 
 # Make a time series plot of the 5-minute interval(x-axis) and the average number of steps taken, average across all days(y-axis).
-```{r}
+```{r echo=TRUE}
 day_averaged <- aggregate(mdata$steps,
                             by = list(Interval = mdata$interval),
                             FUN = "mean")
@@ -55,7 +55,7 @@ plot(day_averaged$Interval, day_averaged$x, type = "l",
 
 ```
 # Define the interval with the maximum number of steps
-```{r}
+```{r echo=TRUE}
 row_intvl <- which.max(day_averaged$x)
 max_intvl <- day_averaged[row_intvl,1]
 print(max_intvl)
@@ -63,20 +63,20 @@ print(max_intvl)
 ## Imputing missing values
 
 # Calculate the total number of missing values in the dataset.
-```{r}
+```{r echo=TRUE}
 num_missing_val <- length(which(is.na(rdata$steps)))
 print(num_missing_val)
 ```
 # Use simple 'impute' function in 'Hmisc' package to substitute NA values in the data.
 
 # Create a new dataset that is equal to the original dataset but with the missing data filled in.
-```{r}
+```{r echo=TRUE}
 library(Hmisc)
 filled_raw_data <- rdata
 filled_raw_data$steps <- impute(rdata$steps, fun= mean)
 ```
 # Make a histogram of the total number of steps taken each day with new frequencies of total number of steps after imputing.
-```{r}
+```{r echo=TRUE}
 steps_per_day_without_na <- aggregate(filled_raw_data$steps,
           by = list(Steps.Date = filled_raw_data$date),
           FUN = "sum")
@@ -86,11 +86,11 @@ hist(steps_per_day_without_na$x, col = "yellow",
      xlab = "Number of steps per day")
 ```
 # Calculate the new mean and median
-```{r}
+```{r echo=TRUE}
 mean_of_steps_noNA <- mean(steps_per_day_without_na[,2])
 print(mean_of_steps_noNA)
 ```
-```{r}
+```{r echo=TRUE}
 median_of_steps_noNA <-
 median(steps_per_day_without_na[,2])
 print(median_of_steps_noNA)
@@ -100,7 +100,7 @@ print(median_of_steps_noNA)
 ## Are there differences in activity patterns between weekdays and weekends?
 
 # To answer the question above, craete a new variable in the dataset to indicate whether a given date is a weekday or weekend.
-```{r}
+```{r echo=TRUE}
 filled_raw_data$date <- as.Date(filled_raw_data$date)
 filled_raw_data$weekday <- weekdays(filled_raw_data$date)
 filled_raw_data$type_of_day <- ifelse(filled_raw_data$weekday =="Saturday" |
@@ -109,7 +109,7 @@ filled_raw_data$type_of_day<- factor(filled_raw_data$type_of_day)
 ```
 
 # To observe the differences in activity patterns between weekdays and weekends, plot the number of steps for all 5-minuute intervals, averaged across weekdays and weekends separately.
-```{r}
+```{r echo=TRUE}
 type_of_day_data <- aggregate(steps ~ interval + type_of_day, data = filled_raw_data, mean)
 
 library(ggplot2)
